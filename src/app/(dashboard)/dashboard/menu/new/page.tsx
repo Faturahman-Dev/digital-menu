@@ -137,7 +137,7 @@ export default function NewMenuPage() {
               </div>
             ) : (
               <div className='border border-gray-200 rounded-xl overflow-hidden'>
-                <UploadDropzone<OurFileRouter>
+                <UploadDropzone<OurFileRouter, "imageUploader">
                   endpoint='imageUploader'
                   onClientUploadComplete={(res) => {
                     // res[0].url adalah link gambar yang berhasil di-upload ke server
