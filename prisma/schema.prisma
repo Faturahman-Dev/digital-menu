@@ -1,0 +1,84 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 1. User & Auth (Pemilik Toko)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // Untuk login email/pass
+  image         String?   // Foto profil
+  plan          Plan      @default(FREE)
+  stripeId      String?   @unique // Untuk integrasi pembayaran
+  store         Store?    // Relasi 1-ke-1: Satu user mengelola satu toko
+  createdAt     DateTime  @default(now())
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+// 2. Store (Tenant/Toko)
+model Store {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique // Contoh: 'kopi-senja' untuk URL menu.com/kopi-senja
+  description String?
+  logoUrl     String?
+  
+  // Customization (disimpan sebagai JSON)
+  // Contoh: { "primaryColor": "#000", "font": "Inter", "layout": "grid" }
+  themeConfig Json?    @default("{}")
+
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  categories  Category[]
+  menuItems   MenuItem[]
+  analytics   Analytics[]
+}
+
+// 3. Kategori Menu (Makanan, Minuman, dsb)
+model Category {
+  id      String     @id @default(cuid())
+  name    String
+  storeId String
+  store   Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  items   MenuItem[]
+}
+
+// 4. Item Menu
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  isAvailable Boolean  @default(true)
+  
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+// 5. Analytics (Sederhana)
+model Analytics {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  views     Int      @default(0)
+  date      DateTime @default(now())
+}
+
