@@ -1,3 +1,4 @@
+import CheckoutButton from "@/components/dashboard/CheckoutButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -100,14 +101,7 @@ export default async function BillingPage() {
             </button>
           ) : (
             // Form untuk memicu Server Action
-            <form action={createCheckoutSession}>
-              <button
-                type='submit'
-                className='w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 hover:shadow-lg transition-all transform active:scale-95'
-              >
-                Upgrade ke PRO Sekarang
-              </button>
-            </form>
+            <CheckoutButton />
           )}
         </div>
       </div>
