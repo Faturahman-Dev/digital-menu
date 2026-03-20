@@ -25,10 +25,12 @@ export default async function SettingsPage() {
     : undefined;
 
   return (
-    <div className='max-w-2xl mx-auto'>
+    <div className='max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8'>
       <div className='mb-8'>
-        <h1 className='text-2xl font-bold text-gray-900'>Pengaturan Toko</h1>
-        <p className='text-gray-600 mt-1'>
+        <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>
+          Pengaturan Toko
+        </h1>
+        <p className='mt-2 text-sm sm:text-base text-gray-500'>
           Atur identitas bisnis Anda yang akan dilihat oleh pelanggan.
         </p>
       </div>

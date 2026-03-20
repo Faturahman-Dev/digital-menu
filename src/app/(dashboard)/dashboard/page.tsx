@@ -31,24 +31,27 @@ export default async function DashboardPage() {
     : 0;
 
   return (
-    <div className='max-w-6xl mx-auto pb-12'>
+    // PERUBAHAN 1: Tambah px-4 (padding HP) dan sm:px-6 (padding tablet/laptop)
+    <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20 sm:pb-12'>
       {/* Header Greeting */}
-      <div className='mb-8'>
-        <h1 className='text-3xl font-extrabold text-gray-900 tracking-tight'>
+      <div className='mb-6 sm:mb-8'>
+        {/* PERUBAHAN 2: Teks agak dikecilin dikit di HP (text-2xl) biar gak patah */}
+        <h1 className='text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight'>
           Selamat datang, {session.user.name?.split(" ")[0] || "Pemilik Bisnis"}
           ! 👋
         </h1>
-        <p className='text-gray-500 mt-2'>
+        <p className='text-sm sm:text-base text-gray-500 mt-2'>
           Berikut adalah ringkasan performa menu digital Anda hari ini.
         </p>
       </div>
 
       {!store ? (
         // --- ONBOARDING STATE (Jika belum punya toko) ---
-        <div className='bg-gradient-to-br from-blue-600 to-blue-800 p-10 rounded-3xl text-center shadow-lg text-white'>
-          <div className='w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm'>
+        // PERUBAHAN 3: Padding disesuaikan untuk HP (p-6) dan Laptop (sm:p-10)
+        <div className='bg-gradient-to-br from-blue-600 to-blue-800 p-6 sm:p-10 rounded-2xl sm:rounded-3xl text-center shadow-lg text-white'>
+          <div className='w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 backdrop-blur-sm'>
             <svg
-              className='w-10 h-10 text-white'
+              className='w-8 h-8 sm:w-10 sm:h-10 text-white'
               fill='none'
               stroke='currentColor'
               viewBox='0 0 24 24'
@@ -61,25 +64,28 @@ export default async function DashboardPage() {
               />
             </svg>
           </div>
-          <h2 className='text-2xl font-bold mb-3'>Satu Langkah Lagi!</h2>
-          <p className='text-blue-100 mb-8 max-w-lg mx-auto'>
+          <h2 className='text-xl sm:text-2xl font-bold mb-2 sm:mb-3'>
+            Satu Langkah Lagi!
+          </h2>
+          <p className='text-sm sm:text-base text-blue-100 mb-6 sm:mb-8 max-w-lg mx-auto'>
             Anda belum mengatur identitas toko. Buat profil toko Anda sekarang
             untuk mulai membuat menu digital dan mendapatkan QR Code.
           </p>
           <Link
             href='/dashboard/settings'
-            className='inline-block bg-white text-blue-700 px-8 py-3.5 rounded-xl font-bold hover:bg-gray-50 hover:shadow-lg transition-all transform hover:-translate-y-1'
+            className='inline-block w-full sm:w-auto bg-white text-blue-700 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold hover:bg-gray-50 hover:shadow-lg transition-all transform hover:-translate-y-1'
           >
             Setup Toko Sekarang →
           </Link>
         </div>
       ) : (
         // --- DASHBOARD UTAMA (Jika sudah punya toko) ---
-        <div className='space-y-8'>
+        <div className='space-y-6 sm:space-y-8'>
           {/* STATISTIK CARDS */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+          {/* Grid ini udah bener dari lu, 1 kolom di HP, 2 di Tablet, 4 di Laptop */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6'>
             {/* Card 1: Total Menu */}
-            <div className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
               <div className='w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0'>
                 <svg
                   className='w-6 h-6'
@@ -96,10 +102,12 @@ export default async function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-500'>Total Menu</p>
-                <p className='text-2xl font-bold text-gray-900'>
+                <p className='text-xs sm:text-sm font-medium text-gray-500'>
+                  Total Menu
+                </p>
+                <p className='text-xl sm:text-2xl font-bold text-gray-900'>
                   {store.menuItems.length}{" "}
-                  <span className='text-sm font-normal text-gray-400'>
+                  <span className='text-xs sm:text-sm font-normal text-gray-400'>
                     item
                   </span>
                 </p>
@@ -107,7 +115,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Card 2: Total Kategori */}
-            <div className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
               <div className='w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0'>
                 <svg
                   className='w-6 h-6'
@@ -124,18 +132,20 @@ export default async function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-500'>Kategori</p>
-                <p className='text-2xl font-bold text-gray-900'>
+                <p className='text-xs sm:text-sm font-medium text-gray-500'>
+                  Kategori
+                </p>
+                <p className='text-xl sm:text-2xl font-bold text-gray-900'>
                   {store.categories.length}{" "}
-                  <span className='text-sm font-normal text-gray-400'>
+                  <span className='text-xs sm:text-sm font-normal text-gray-400'>
                     grup
                   </span>
                 </p>
               </div>
             </div>
 
-            {/* Card 3: Pengunjung (Akan dibuat fiturnya nanti) */}
-            <div className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
+            {/* Card 3: Pengunjung */}
+            <div className='bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
               <div className='w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0'>
                 <svg
                   className='w-6 h-6'
@@ -158,12 +168,12 @@ export default async function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-500'>
+                <p className='text-xs sm:text-sm font-medium text-gray-500'>
                   Scan QR Code
                 </p>
-                <p className='text-2xl font-bold text-gray-900'>
-                  {totalViews}
-                  <span className='text-sm font-normal text-gray-400'>
+                <p className='text-xl sm:text-2xl font-bold text-gray-900'>
+                  {totalViews}{" "}
+                  <span className='text-xs sm:text-sm font-normal text-gray-400'>
                     kali
                   </span>
                 </p>
@@ -171,7 +181,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Card 4: Status Paket */}
-            <div className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-5 sm:p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow'>
               <div className='w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center flex-shrink-0'>
                 <svg
                   className='w-6 h-6'
@@ -188,10 +198,10 @@ export default async function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-500'>
+                <p className='text-xs sm:text-sm font-medium text-gray-500'>
                   Paket Saat Ini
                 </p>
-                <span className='inline-flex mt-1 items-center px-2.5 py-0.5 rounded-md text-sm font-bold bg-gray-900 text-white uppercase tracking-wider'>
+                <span className='inline-flex mt-1 items-center px-2 py-0.5 rounded-md text-xs sm:text-sm font-bold bg-gray-900 text-white uppercase tracking-wider'>
                   {user?.plan}
                 </span>
               </div>
@@ -199,26 +209,25 @@ export default async function DashboardPage() {
           </div>
 
           {/* MAIN CONTENT GRID */}
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-            {/* Kolom Kiri: Quick Actions & Tips (Makan 2 kolom di layar besar) */}
-            <div className='lg:col-span-2 space-y-8'>
-              {/* Seksi Aksi Cepat */}
-              <div className='bg-white p-8 rounded-2xl border border-gray-100 shadow-sm'>
-                <h3 className='text-lg font-bold text-gray-900 mb-6 flex items-center gap-2'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8'>
+            {/* Kolom Kiri: Quick Actions */}
+            <div className='lg:col-span-2 space-y-6 sm:space-y-8'>
+              <div className='bg-white p-5 sm:p-8 rounded-2xl border border-gray-100 shadow-sm'>
+                <h3 className='text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2'>
                   ⚡ Aksi Cepat
                 </h3>
-                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4'>
                   <Link
                     href='/dashboard/menu/new'
-                    className='group p-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left flex flex-col items-start justify-center'
+                    className='group p-4 sm:p-5 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left flex flex-col items-start justify-center'
                   >
-                    <span className='w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors'>
+                    <span className='w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors'>
                       +
                     </span>
-                    <span className='font-bold text-gray-900'>
+                    <span className='font-bold text-sm sm:text-base text-gray-900'>
                       Tambah Menu Baru
                     </span>
-                    <span className='text-xs text-gray-500 mt-1'>
+                    <span className='text-[11px] sm:text-xs text-gray-500 mt-1'>
                       Masukkan hidangan baru ke etalase
                     </span>
                   </Link>
@@ -226,11 +235,11 @@ export default async function DashboardPage() {
                     href={`/${store.slug}`}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='group p-5 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-left flex flex-col items-start justify-center'
+                    className='group p-4 sm:p-5 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-left flex flex-col items-start justify-center'
                   >
-                    <span className='w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3 group-hover:bg-green-600 group-hover:text-white transition-colors'>
+                    <span className='w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-green-600 group-hover:text-white transition-colors'>
                       <svg
-                        className='w-5 h-5'
+                        className='w-4 h-4 sm:w-5 sm:h-5'
                         fill='none'
                         stroke='currentColor'
                         viewBox='0 0 24 24'
@@ -243,10 +252,10 @@ export default async function DashboardPage() {
                         />
                       </svg>
                     </span>
-                    <span className='font-bold text-gray-900'>
+                    <span className='font-bold text-sm sm:text-base text-gray-900'>
                       Lihat Menu Publik
                     </span>
-                    <span className='text-xs text-gray-500 mt-1'>
+                    <span className='text-[11px] sm:text-xs text-gray-500 mt-1'>
                       Buka etalase digital Anda saat ini
                     </span>
                   </a>
@@ -254,7 +263,7 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            {/* Kolom Kanan: QR Code */}
+            {/* Kolom Kanan: QR Code (Tetap aman!) */}
             <div className='lg:col-span-1'>
               <QRCodeDisplay
                 slug={store.slug}
