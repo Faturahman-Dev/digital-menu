@@ -23,7 +23,9 @@ interface StoreData {
   description?: string | null;
   logoUrl?: string | null;
   phone?: string | null; // Nomor WA Toko (misal: 628123456789)
-  themeConfig?: any;
+  themeConfig?: {
+    primaryColor?: string; // Warna utama toko (misal: #2563EB)
+  };
   // Fitur baru dari ide lu bro! (Nanti bisa diatur dari database)
   askTableNumber?: boolean;
 }
