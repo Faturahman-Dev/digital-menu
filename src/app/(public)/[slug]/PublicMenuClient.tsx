@@ -375,7 +375,9 @@ export default function PublicMenuClient({
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder='Misal: Budi'
                       className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 outline-none'
-                      style={{ focusRingColor: primaryColor }}
+                      style={{
+                        borderColor: customerName.trim() ? "gray" : "red",
+                      }}
                       required
                     />
                   </div>

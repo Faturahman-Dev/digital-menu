@@ -1,0 +1,35 @@
+[33mcommit de760741a8a91d43526f4b1ef00007a52dfdb62d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Sun Mar 22 08:35:55 2026 +0700
+
+    Fix: Public menu client
+
+[33mcommit 64d30c3566318645af5d568c1f9f384eac2e5a17[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Sat Mar 21 02:14:33 2026 +0700
+
+    Fix: Responsive and Sidebar
+
+[33mcommit b0d8822d0d68c28dbda690ad12852741528aa4dd[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Fri Mar 20 00:18:05 2026 +0700
+
+    Fix: Menambahkan tipe argumen endpoint di UploadDropzone biar TypeScript nggak rewel
+
+[33mcommit 8753cb014b5fb07457070e552a98bf8b04eb5b63[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Fri Mar 20 00:10:18 2026 +0700
+
+    Fix: Menambahkan komponen CheckoutButton yang ketinggalan wkwk
+
+[33mcommit 2afc39396fa18820cd808af9605694754c8bec87[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Fri Mar 20 00:00:05 2026 +0700
+
+    Fix: menambahkan full code proxy.ts untuk penjaga dashboard
+
+[33mcommit 45ded638a9a26d898f69048e7cc04ef24a122911[m
+Author: Faturahman-Dev <agungfaturahman323@gmail.com>
+Date:   Thu Mar 19 23:41:00 2026 +0700
+
+    SaaS Menu Digital
