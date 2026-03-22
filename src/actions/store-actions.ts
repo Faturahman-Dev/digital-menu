@@ -13,18 +13,36 @@ export async function createOrUpdateStore(formData: FormData) {
   const slugInput = formData.get("slug") as string;
   const description = formData.get("description") as string;
 
-  // Tangkap warna, kalau kosong kita kasih default biru
-  const themeColor = (formData.get("themeColor") as string) || "#2563EB";
-
   if (!name || !slugInput) {
     return { error: "Nama dan URL Toko wajib diisi!" };
   }
 
+  // Bikin Slug jadi huruf kecil dan tanpa spasi
   const slug = slugInput
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
+  // 🚀 --- PERUBAHAN UTAMA DI SINI --- 🚀
+  // Tangkap seluruh paket JSON dari frontend
+  const themeConfigRaw = formData.get("themeConfig") as string;
+  let themeConfig = {};
+
+  if (themeConfigRaw) {
+    try {
+      // Terjemahin dari teks JSON ke Object JavaScript biar Prisma ngerti
+      themeConfig = JSON.parse(themeConfigRaw);
+    } catch (error) {
+      console.error("Gagal membaca themeConfig:", error);
+      return { error: "Format dekorasi toko tidak valid." };
+    }
+  } else {
+    // Fallback/Jaga-jaga kalau data lamanya masih pake 'themeColor'
+    const themeColor = (formData.get("themeColor") as string) || "#2563EB";
+    themeConfig = { primaryColor: themeColor };
+  }
+
+  // Cek apakah slug udah dipakai toko lain
   const existingStore = await db.store.findUnique({ where: { slug } });
   const userStore = await db.store.findUnique({
     where: { userId: session.user.id },
@@ -34,12 +52,11 @@ export async function createOrUpdateStore(formData: FormData) {
     return { error: "URL Toko sudah digunakan oleh orang lain." };
   }
 
-  // Bungkus warna sebagai JSON Object yang disukai Prisma
-  const themeConfig = { primaryColor: themeColor };
-
+  // Update atau Buat Toko Baru
   if (userStore) {
     await db.store.update({
       where: { userId: session.user.id },
+      // Masukin themeConfig yang udah lengkap (ada font, logo, dll)
       data: { name, slug, description, themeConfig },
     });
   } else {
@@ -54,10 +71,10 @@ export async function createOrUpdateStore(formData: FormData) {
     });
   }
 
-  // Refresh semua jalur yang berkaitan dengan toko ini
+  // Refresh cache halaman biar perubahannya instan!
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings");
-  revalidatePath(`/${slug}`); // Refresh halaman etalase publik
+  revalidatePath(`/${slug}`);
 
   return { success: true };
 }

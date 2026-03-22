@@ -22,11 +22,8 @@ interface StoreData {
   name: string;
   description?: string | null;
   logoUrl?: string | null;
-  phone?: string | null; // Nomor WA Toko (misal: 628123456789)
-  themeConfig?: {
-    primaryColor?: string; // Warna utama toko (misal: #2563EB)
-  };
-  // Fitur baru dari ide lu bro! (Nanti bisa diatur dari database)
+  phone?: string | null; // Nomor WA Toko
+  themeConfig?: any; // Pake any biar bebas nampung font, cardStyle, dll
   askTableNumber?: boolean;
 }
 
@@ -40,11 +37,9 @@ export default function PublicMenuClient({
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // State buat ngurusin pop-up dan form
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState<"cart" | "form">("cart"); // 'cart' = liat pesanan, 'form' = isi data
+  const [checkoutStep, setCheckoutStep] = useState<"cart" | "form">("cart");
 
-  // Data Pembeli
   const [customerName, setCustomerName] = useState("");
   const [orderType, setOrderType] = useState<"dine_in" | "takeaway">("dine_in");
   const [tableNumber, setTableNumber] = useState("");
@@ -57,12 +52,37 @@ export default function PublicMenuClient({
     clearCart,
   } = useCartStore();
 
-  const theme = store.themeConfig || {};
+  // 🎨 --- KAMUS TAILWIND (Wajib biar CSS gak dihapus otomatis) --- 🎨
+  const FONT_MAP: Record<string, string> = {
+    "font-sans": "font-sans",
+    "font-serif": "font-serif",
+    "font-mono": "font-mono",
+  };
+
+  const CARD_MAP: Record<string, string> = {
+    "rounded-none": "rounded-none",
+    "rounded-xl": "rounded-xl",
+    "rounded-3xl": "rounded-3xl",
+  };
+
+  // 🎨 --- BONGKAR JSON DEKORASI TOKO --- 🎨
+  let theme = store.themeConfig || {};
+  if (typeof theme === "string") {
+    try {
+      theme = JSON.parse(theme);
+    } catch (e) {
+      theme = {};
+    }
+  }
+
   const primaryColor = theme.primaryColor || "#2563EB";
-  const defaultBanner =
+  const fontStyle = FONT_MAP[theme.font] || "font-sans";
+  const cardStyle = CARD_MAP[theme.cardStyle] || "rounded-2xl"; // default rounded-2xl
+  const logo = theme.logoUrl || store.logoUrl;
+  const banner =
+    theme.bannerUrl ||
     "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80";
 
-  // Anggap aja dari database udah di-set true/false (Default kita bikin true buat testing)
   const isTableFeatureEnabled = store.askTableNumber !== false;
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -98,10 +118,7 @@ export default function PublicMenuClient({
       return;
     }
 
-    // Nomor WA toko (kalo kosong, pake nomor lu sementara buat tes)
     const storePhone = store.phone || "628817431760";
-
-    // Bikin struk pesanannya
     let message = `Halo *${store.name}*, saya mau pesan:\n\n`;
 
     cartItems.forEach((item) => {
@@ -121,36 +138,46 @@ export default function PublicMenuClient({
       message += `Catatan: ${notes}\n`;
     }
 
-    // Ubah teks jadi format URL biar bisa dibuka di WA
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${storePhone}?text=${encodedMessage}`;
 
-    // Buka WhatsApp di tab baru
     window.open(whatsappUrl, "_blank");
-
-    // Opsional: Tutup keranjang dan kosongin pesanan setelah sukses kirim
     setIsCartOpen(false);
     clearCart();
     setCheckoutStep("cart");
   };
 
   return (
-    <div className='min-h-screen bg-[#f8f9fa] pb-32 font-sans'>
-      {/* ... [BAGIAN HEADER & DAFTAR MENU SAMA KAYAK SEBELUMNYA] ... */}
+    // 🎨 --- MASUKIN VARIABEL FONT DINAMIS KE CONTAINER PALING LUAR --- 🎨
+    <div className={`min-h-screen bg-[#f8f9fa] pb-32 ${fontStyle}`}>
+      {/* 🖼️ --- HEADER HERO SECTION (Banner Dinamis) --- 🖼️ */}
       <div className='relative h-56 sm:h-72 w-full bg-gray-900'>
         <img
-          src={store.logoUrl || defaultBanner}
+          src={banner}
           alt={store.name}
           className='w-full h-full object-cover opacity-60'
         />
-        <div className='absolute inset-0 bg-gradient-to-t from-black/80 to-transparent' />
-        <div className='absolute bottom-0 left-0 p-6 sm:p-8 w-full'>
-          <h1 className='text-3xl font-extrabold text-white'>{store.name}</h1>
-          {store.description && (
-            <p className='mt-2 text-gray-200 text-sm line-clamp-2'>
-              {store.description}
-            </p>
+        <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent' />
+
+        {/* Kontainer Nama & Logo biar cakep */}
+        <div className='absolute bottom-0 left-0 p-6 sm:p-8 w-full flex items-end gap-5'>
+          {logo && (
+            <img
+              src={logo}
+              alt='Logo Toko'
+              className='w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-xl object-cover bg-white flex-shrink-0'
+            />
           )}
+          <div className='flex-1'>
+            <h1 className='text-3xl font-extrabold text-white drop-shadow-md'>
+              {store.name}
+            </h1>
+            {store.description && (
+              <p className='mt-2 text-gray-200 text-sm line-clamp-2 drop-shadow-sm'>
+                {store.description}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -192,9 +219,10 @@ export default function PublicMenuClient({
                 {category.items.map((item: MenuItem) => {
                   const cartItem = cartItems.find((i) => i.id === item.id);
                   return (
+                    // 🎨 --- BENTUK KARTU (KOTAK/BULAT) DI-INJECT KE SINI --- 🎨
                     <div
                       key={item.id}
-                      className='flex bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm'
+                      className={`flex bg-white ${cardStyle} overflow-hidden border border-gray-100 shadow-sm transition-shadow hover:shadow-md`}
                     >
                       <div className='w-28 flex-shrink-0 bg-gray-100 relative'>
                         <img
@@ -271,7 +299,7 @@ export default function PublicMenuClient({
         </div>
       </main>
 
-      {/* --- TOMBOL MENGAMBANG --- */}
+      {/* --- TOMBOL MENGAMBANG KERANJANG BELANJA --- */}
       {totalItems > 0 && !isCartOpen && (
         <div className='fixed bottom-6 left-0 right-0 px-4 z-40 animate-bounce-short'>
           <div className='max-w-md mx-auto'>
@@ -404,7 +432,6 @@ export default function PublicMenuClient({
                     </div>
                   </div>
 
-                  {/* KONDISI NOMOR MEJA: Muncul kalau Dine In DAN Pemilik Toko ngaktifin fiturnya */}
                   {isTableFeatureEnabled && orderType === "dine_in" && (
                     <div>
                       <label className='block text-sm font-bold text-gray-700 mb-1'>
@@ -436,7 +463,7 @@ export default function PublicMenuClient({
               )}
             </div>
 
-            {/* AREA BAWAH MODAL (TOTAL & TOMBOL) */}
+            {/* AREA BAWAH MODAL */}
             <div className='p-6 bg-gray-50 border-t border-gray-100 pb-10'>
               <div className='flex justify-between items-center mb-6'>
                 <span className='text-gray-500 font-medium'>
@@ -459,7 +486,7 @@ export default function PublicMenuClient({
                 <button
                   onClick={handleSendWhatsApp}
                   className='w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2'
-                  style={{ backgroundColor: "#25D366" }} // Warna Hijau WhatsApp
+                  style={{ backgroundColor: "#25D366" }}
                 >
                   Kirim ke WhatsApp
                 </button>

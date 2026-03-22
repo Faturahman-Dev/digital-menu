@@ -37,32 +37,57 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Masuk ke Dashboard</h2>
-        
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+    <div className='flex min-h-screen items-center justify-center bg-gray-50'>
+      <div className='w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-md'>
+        <h2 className='text-2xl font-bold text-center text-gray-900'>
+          Masuk ke Dashboard
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+
+        <form
+          onSubmit={handleSubmit}
+          className='space-y-4'
+        >
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" name="email" required className="w-full px-3 py-2 mt-1 border rounded-md" />
+            <label className='block text-sm font-medium text-gray-700'>
+              Email
+            </label>
+            <input
+              type='email'
+              name='email'
+              required
+              className='w-full px-3 py-2 mt-1 border rounded-md'
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" name="password" required className="w-full px-3 py-2 mt-1 border rounded-md" />
+            <label className='block text-sm font-medium text-gray-700'>
+              Password
+            </label>
+            <input
+              type='password'
+              name='password'
+              required
+              className='w-full px-3 py-2 mt-1 border rounded-md'
+            />
           </div>
-          <button 
-            type="submit" 
+          <button
+            type='submit'
             disabled={loading}
-            className="w-full px-4 py-2 text-white bg-gray-900 rounded-md hover:bg-gray-800 disabled:bg-gray-400"
+            className='w-full px-4 py-2 text-white bg-gray-900 rounded-md hover:bg-gray-800 disabled:bg-gray-400'
           >
             {loading ? "Masuk..." : "Login"}
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-600">
-          Belum punya akun? <Link href="/register" className="text-blue-600 hover:underline">Daftar sekarang</Link>
+        <p className='text-sm text-center text-gray-600'>
+          Belum punya akun?{" "}
+          <Link
+            href='/register'
+            className='text-blue-600 hover:underline'
+          >
+            Daftar sekarang
+          </Link>
         </p>
       </div>
     </div>

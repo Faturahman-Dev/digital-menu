@@ -11,7 +11,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^6.19.2",
-    "@uploadthing/react": "^7.3.3",
+    "@uploadthing/react": "^6.6.0",
     "bcryptjs": "^3.0.3",
     "next": "16.1.7",
     "next-auth": "^4.24.13",
@@ -19,7 +19,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "stripe": "^20.4.1",
-    "uploadthing": "^7.7.4",
+    "sweetalert2": "^11.26.24",
+    "sweetalert2-react-content": "^5.1.2",
+    "uploadthing": "^6.12.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
@@ -31,7 +33,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.7",
-    "prisma": "^6.19.2",
+    "prisma": "^6.12.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

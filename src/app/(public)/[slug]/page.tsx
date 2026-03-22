@@ -2,6 +2,9 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import PublicMenuClient from "./PublicMenuClient"; // Import file yang baru kita bikin
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PublicMenuProps {
   params: Promise<{ slug: string }>;
 }
