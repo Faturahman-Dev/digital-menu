@@ -99,7 +99,7 @@ export default function PublicMenuClient({
     }
 
     // Nomor WA toko (kalo kosong, pake nomor lu sementara buat tes)
-    const storePhone = store.phone || "6281234567890";
+    const storePhone = store.phone || "628817431760";
 
     // Bikin struk pesanannya
     let message = `Halo *${store.name}*, saya mau pesan:\n\n`;
