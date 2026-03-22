@@ -41,7 +41,7 @@ export default async function PublicMenuPage({ params }: PublicMenuProps) {
   // Lempar datanya ke Komponen Client biar bisa di-search & klik
   return (
     <PublicMenuClient
-      store={{ ...store, themeConfig: store.themeConfig as ThemeConfig }}
+      store={{ ...store, themeConfig: store.themeConfig as any }}
       categories={activeCategories}
     />
   );
