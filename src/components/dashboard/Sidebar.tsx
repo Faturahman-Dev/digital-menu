@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -9,7 +9,16 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  // Daftar menu navigasi (Silakan ditambah/dikurang sesuai kebutuhan)
+  // Solusi Aman: Gunakan useEffect untuk menutup sidebar saat URL berubah
+  useEffect(() => {
+    // Kalau sidebar sedang terbuka, otomatis tutup saat pindah halaman
+    if (isOpen) {
+      setIsOpen(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Daftar menu navigasi
   const menuItems = [
     {
       name: "Dashboard",
@@ -36,16 +45,15 @@ export default function Sidebar() {
   return (
     <>
       {/* --- MOBILE TOP BAR (Hanya muncul di HP) --- */}
-      <div className='md:hidden fixed top-0 left-0 w-full bg-white border-b border-gray-200 z-40 px-4 py-4 flex items-center justify-between shadow-sm'>
+      <div className='md:hidden fixed top-0 left-0 w-full bg-white border-b border-gray-200 z-50 px-4 py-4 flex items-center justify-between shadow-sm'>
         <span className='font-extrabold text-xl text-blue-600 tracking-tight'>
           SaaS Menu
         </span>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className='text-gray-500 hover:text-gray-900 focus:outline-none p-1'
+          className='text-gray-500 hover:text-gray-900 focus:outline-none p-1 relative z-50'
         >
           {isOpen ? (
-            // Icon Close (X)
             <svg
               className='w-7 h-7'
               fill='none'
@@ -60,7 +68,6 @@ export default function Sidebar() {
               />
             </svg>
           ) : (
-            // Icon Hamburger (Garis 3)
             <svg
               className='w-7 h-7'
               fill='none'
@@ -82,30 +89,27 @@ export default function Sidebar() {
       {isOpen && (
         <div
           className='md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity'
-          onClick={() => setIsOpen(false)} // Tutup sidebar kalau area gelap diklik
+          onClick={() => setIsOpen(false)}
         />
       )}
 
-      {/* --- SIDEBAR UTAMA (Sliding di HP, Fixed di Laptop) --- */}
+      {/* --- SIDEBAR UTAMA --- */}
       <aside
         className={`
           fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-100 z-50 flex flex-col shadow-xl md:shadow-none
           transform transition-transform duration-300 ease-in-out
-          md:translate-x-0 md:static
+          md:translate-x-0 md:static md:z-auto
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Logo (Hanya di Laptop, di HP udah ada di Top Bar) */}
         <div className='hidden md:flex items-center justify-center h-20 border-b border-gray-100 px-6'>
           <span className='font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 tracking-tight'>
             SaaS Menu
           </span>
         </div>
 
-        {/* Daftar Menu */}
         <nav className='flex-1 px-4 py-6 space-y-2 overflow-y-auto mt-16 md:mt-0'>
           {menuItems.map((item) => {
-            // Ini ngasih tau: "Khusus tombol Dashboard, harus SAMA PERSIS. Kalau yang lain, boleh ngecek awalan"
             const isActive =
               item.href === "/dashboard"
                 ? pathname === "/dashboard"
@@ -115,7 +119,7 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                onClick={() => setIsOpen(false)} // Otomatis tutup menu di HP pas diklik
+                onClick={() => setIsOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
                   isActive
                     ? "bg-blue-50 text-blue-700"
@@ -141,7 +145,6 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* Tombol Logout di paling bawah */}
         <div className='p-4 border-t border-gray-100'>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
