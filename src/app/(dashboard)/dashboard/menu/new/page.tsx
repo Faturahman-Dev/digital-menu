@@ -5,34 +5,41 @@ import { createMenu } from "@/actions/menu-actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-// Import komponen UploadThing
-import { UploadDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
-import "@uploadthing/react/styles.css"; // CSS Bawaan UploadThing
+// 1. IMPORT DARI PACKAGE TERBARU
+import { generateUploadDropzone } from "@uploadthing/react";
+import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import "@uploadthing/react/styles.css";
+
+// 2. GENERATE KOMPONENNYA DI SINI (Gak butuh file lib lagi!)
+const UploadDropzone = generateUploadDropzone<OurFileRouter>();
 
 export default function NewMenuPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>(""); // State untuk menyimpan URL gambar
+  const [imageUrl, setImageUrl] = useState<string>("");
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setError(null);
 
-    // Sisipkan URL gambar yang sudah di-upload ke dalam form data
     if (imageUrl) {
       formData.set("image", imageUrl);
     }
 
-    const result = await createMenu(formData);
+    try {
+      const result = await createMenu(formData);
 
-    if (result.error) {
-      setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+        setLoading(false);
+      } else {
+        router.push("/dashboard/menu");
+        router.refresh();
+      }
+    } catch (err) {
+      setError("Terjadi kesalahan sistem saat menyimpan menu. Coba lagi ya.");
       setLoading(false);
-    } else {
-      router.push("/dashboard/menu");
-      router.refresh();
     }
   }
 
@@ -137,12 +144,11 @@ export default function NewMenuPage() {
               </div>
             ) : (
               <div className='border border-gray-200 rounded-xl overflow-hidden'>
-                <UploadDropzone<OurFileRouter, "imageUploader">
+                {/* KOMPONEN UPLOADTHING YANG SUDAH SUPPORT APPEARANCE */}
+                <UploadDropzone
                   endpoint='imageUploader'
                   onClientUploadComplete={(res) => {
-                    // res[0].url adalah link gambar yang berhasil di-upload ke server
                     setImageUrl(res[0].url);
-                    alert("Gambar berhasil di-upload!");
                   }}
                   onUploadError={(error: Error) => {
                     alert(`ERROR! ${error.message}`);
